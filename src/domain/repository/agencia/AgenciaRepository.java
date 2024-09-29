@@ -11,11 +11,11 @@ public class AgenciaRepository implements IAgenciaRepository{
     private static final String FILE_PATH = "agencias.csv";
 
     @Override
-    public void save(Agencia usuario) {
+    public void save(Agencia agencia) {
         int nextId = getNextId();
-        usuario.setId(nextId);
+        agencia.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(usuario.toString());
+            writer.write(agencia.toString());
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();

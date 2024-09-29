@@ -69,7 +69,7 @@ public class Agencia {
 
     @Override
     public String toString() {
-        return id + ", " + cnpj + ", " + razaoSocial + ", " + nomeFantasia + ", " + telefone;
+        return id + ", " + cnpj + ", " + razaoSocial + ", " + nomeFantasia + ", " + telefone + ", " + email;
     }
 
     public static Agencia fromCSV(String csvLine) {

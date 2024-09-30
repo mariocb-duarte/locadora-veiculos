@@ -1,6 +1,6 @@
 package domain.repository.cliente;
 
-import domain.model.agencia.Agencia;
+import domain.exception.cliente.AlreadyExistsClienteException;
 import domain.model.cliente.ClientePessoaFisica;
 
 import java.io.*;
@@ -13,6 +13,9 @@ public class ClientePessoaFisicaRepository implements IClientePessoaFisicaReposi
 
     @Override
     public void save(ClientePessoaFisica clientePessoaFisica) {
+        if (clienteExists(clientePessoaFisica)) {
+            throw new AlreadyExistsClienteException("Agencia already exists");
+        }
         int nextId = getNextId();
         clientePessoaFisica.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -35,8 +38,12 @@ public class ClientePessoaFisicaRepository implements IClientePessoaFisicaReposi
                 clientePessoaFisica.setEmail(updatedClientePessoaFisica.getEmail());
                 clientePessoaFisica.setTelefone(updatedClientePessoaFisica.getTelefone());
                 clientePessoaFisica.setCpf(updatedClientePessoaFisica.getCpf());
-                updated = true;
-                break;
+                if (clienteExists(clientePessoaFisica)) {
+                    throw new AlreadyExistsClienteException("Cliente already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
         //int id, String nome, String email, String telefone, String cpf
@@ -102,5 +109,14 @@ public class ClientePessoaFisicaRepository implements IClientePessoaFisicaReposi
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean clienteExists(ClientePessoaFisica clientePessoaFisica) {
+        List<ClientePessoaFisica> clientes = findAll();
+        return clientes.stream().anyMatch(u ->
+                u.getCpf().equalsIgnoreCase(clientePessoaFisica.getCpf()) ||
+                u.getTelefone().equalsIgnoreCase(clientePessoaFisica.getTelefone()) ||
+                u.getEmail().equalsIgnoreCase(clientePessoaFisica.getEmail())
+        );
     }
 }

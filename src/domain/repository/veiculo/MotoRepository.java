@@ -1,5 +1,8 @@
 package domain.repository.veiculo;
 
+import domain.exception.agencia.AlreadyExistsAgenciaException;
+import domain.exception.veiculo.AlreadyExistsVeiculoException;
+import domain.model.agencia.Agencia;
 import domain.model.veiculo.Moto;
 
 import java.io.*;
@@ -13,6 +16,9 @@ public class MotoRepository implements IMotoRepository {
 
     @Override
     public void save(Moto moto) {
+        if (motoExists(moto)) {
+            throw new AlreadyExistsVeiculoException("Veículo already exists");
+        }
         int nextId = getNextId();
         moto.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -39,8 +45,12 @@ public class MotoRepository implements IMotoRepository {
                 moto.setCor(updatedMoto.getCor());
                 moto.setDisponivel(updatedMoto.isDisponivel());
                 moto.setLocalizacao(updatedMoto.getLocalizacao());
-                updated = true;
-                break;
+                if (motoExists(moto)) {
+                    throw new AlreadyExistsVeiculoException("Veículo already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
         //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
@@ -106,5 +116,12 @@ public class MotoRepository implements IMotoRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean motoExists(Moto moto) {
+        List<Moto> motos = findAll();
+        return motos.stream().anyMatch(u ->
+                u.getPlaca().equalsIgnoreCase(moto.getPlaca())
+        );
     }
 }

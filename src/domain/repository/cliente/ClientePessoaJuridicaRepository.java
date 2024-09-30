@@ -1,6 +1,6 @@
 package domain.repository.cliente;
 
-import domain.model.cliente.ClientePessoaFisica;
+import domain.exception.cliente.AlreadyExistsClienteException;
 import domain.model.cliente.ClientePessoaJuridica;
 
 import java.io.*;
@@ -14,6 +14,9 @@ public class ClientePessoaJuridicaRepository implements IClientePessoaJuridicaRe
 
     @Override
     public void save(ClientePessoaJuridica clientePessoaJuridica) {
+        if (clienteExists(clientePessoaJuridica)) {
+            throw new AlreadyExistsClienteException("Cliente already exists");
+        }
         int nextId = getNextId();
         clientePessoaJuridica.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -36,8 +39,12 @@ public class ClientePessoaJuridicaRepository implements IClientePessoaJuridicaRe
                 clientePessoaJuridica.setEmail(updatedClientePessoaJuridica.getEmail());
                 clientePessoaJuridica.setTelefone(updatedClientePessoaJuridica.getTelefone());
                 clientePessoaJuridica.setCnpj(updatedClientePessoaJuridica.getCnpj());
-                updated = true;
-                break;
+                if (clienteExists(clientePessoaJuridica)) {
+                    throw new AlreadyExistsClienteException("Cliente already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
         //int id, String nome, String email, String telefone, String cpf
@@ -102,6 +109,15 @@ public class ClientePessoaJuridicaRepository implements IClientePessoaJuridicaRe
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean clienteExists(ClientePessoaJuridica clientePessoaJuridica) {
+        List<ClientePessoaJuridica> clientes = findAll();
+        return clientes.stream().anyMatch(u ->
+                u.getCnpj().equalsIgnoreCase(clientePessoaJuridica.getCnpj()) ||
+                u.getTelefone().equalsIgnoreCase(clientePessoaJuridica.getTelefone()) ||
+                u.getEmail().equalsIgnoreCase(clientePessoaJuridica.getEmail())
+        );
     }
 }
 

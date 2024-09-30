@@ -1,6 +1,8 @@
 package domain.repository.veiculo;
 
+import domain.exception.veiculo.AlreadyExistsVeiculoException;
 import domain.model.veiculo.Carro;
+import domain.model.veiculo.Moto;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,6 +14,9 @@ public class CarroRepository implements ICarroRepository{
 
     @Override
     public void save(Carro carro) {
+        if (carroExists(carro)) {
+            throw new AlreadyExistsVeiculoException("Veículo already exists");
+        }
         int nextId = getNextId();
         carro.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -38,8 +43,12 @@ public class CarroRepository implements ICarroRepository{
                 carro.setCor(updatedCarro.getCor());
                 carro.setDisponivel(updatedCarro.isDisponivel());
                 carro.setLocalizacao(updatedCarro.getLocalizacao());
-                updated = true;
-                break;
+                if (carroExists(carro)) {
+                    throw new AlreadyExistsVeiculoException("Veículo already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
         //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
@@ -105,5 +114,12 @@ public class CarroRepository implements ICarroRepository{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean carroExists(Carro carro) {
+        List<Carro> carros = findAll();
+        return carros.stream().anyMatch(u ->
+                u.getPlaca().equalsIgnoreCase(carro.getPlaca())
+        );
     }
 }

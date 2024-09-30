@@ -1,17 +1,21 @@
 package domain.repository.agencia;
 
+import domain.exception.agencia.AlreadyExistsAgenciaException;
 import domain.model.agencia.Agencia;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgenciaRepository implements IAgenciaRepository{
+public class AgenciaRepository implements IAgenciaRepository {
 
     private static final String FILE_PATH = "agencias.csv";
 
     @Override
     public void save(Agencia agencia) {
+        if (agenciaExists(agencia)) {
+            throw new AlreadyExistsAgenciaException("Agencia already exists");
+        }
         int nextId = getNextId();
         agencia.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -36,8 +40,12 @@ public class AgenciaRepository implements IAgenciaRepository{
                 agencia.setTelefone(updatedAgencia.getTelefone());
                 agencia.setEmail(updatedAgencia.getEmail());
                 agencia.setRazaoSocial(updatedAgencia.getRazaoSocial());
-                updated = true;
-                break;
+                if (agenciaExists(agencia)) {
+                    throw new AlreadyExistsAgenciaException("Agencia already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
 
@@ -102,5 +110,14 @@ public class AgenciaRepository implements IAgenciaRepository{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean agenciaExists(Agencia agencia) {
+        List<Agencia> agencias = findAll();
+        return agencias.stream().anyMatch(u ->
+                u.getCnpj().equalsIgnoreCase(agencia.getCnpj()) ||
+                u.getNomeFantasia().equalsIgnoreCase(agencia.getNomeFantasia()) ||
+                u.getRazaoSocial().equalsIgnoreCase(agencia.getRazaoSocial())
+        );
     }
 }

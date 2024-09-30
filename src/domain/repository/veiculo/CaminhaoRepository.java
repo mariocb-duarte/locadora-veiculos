@@ -1,5 +1,6 @@
 package domain.repository.veiculo;
 
+import domain.exception.veiculo.AlreadyExistsVeiculoException;
 import domain.model.veiculo.Caminhao;
 import domain.model.veiculo.Moto;
 
@@ -13,6 +14,9 @@ public class CaminhaoRepository implements ICaminhaoRepository{
 
     @Override
     public void save(Caminhao caminhao) {
+        if (caminhaoExists(caminhao)) {
+            throw new AlreadyExistsVeiculoException("Veículo already exists");
+        }
         int nextId = getNextId();
         caminhao.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -39,9 +43,12 @@ public class CaminhaoRepository implements ICaminhaoRepository{
                 caminhao.setCor(updatedcaminhao.getCor());
                 caminhao.setDisponivel(updatedcaminhao.isDisponivel());
                 caminhao.setLocalizacao(updatedcaminhao.getLocalizacao());
-
-                updated = true;
-                break;
+                if (caminhaoExists(caminhao)) {
+                    throw new AlreadyExistsVeiculoException("Veículo already exists");
+                }else {
+                    updated = true;
+                    break;
+                }
             }
         }
         //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
@@ -107,5 +114,12 @@ public class CaminhaoRepository implements ICaminhaoRepository{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean caminhaoExists(Caminhao caminhao) {
+        List<Caminhao> caminhoes = findAll();
+        return caminhoes.stream().anyMatch(u ->
+                u.getPlaca().equalsIgnoreCase(caminhao.getPlaca())
+        );
     }
 }

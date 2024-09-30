@@ -1,43 +1,40 @@
 package domain.service.operacao;
 
-
 import domain.model.operacao.OperacaoDevolucao;
-import domain.model.operacao.OperacaoLocacao;
 import domain.repository.operacao.OperacaoDevolucaoRepository;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class OperacaoDevolucaoService {
-    private OperacaoDevolucaoRepository operacaoRepository;
-    private OperacaoLocacao operacaoLocacao;
+    private OperacaoDevolucaoRepository operacaoLocacaoRepository;
 
     public OperacaoDevolucaoService() {
-        this.operacaoRepository = new OperacaoDevolucaoRepository();
+        this.operacaoLocacaoRepository = new OperacaoDevolucaoRepository();
     }
 
     public void saveOperacao(LocalDateTime dataHoraOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo, double custo) {
-
-        OperacaoDevolucao operacaoDevolucao = new OperacaoDevolucao(0, dataHoraOperacao, emailCliente, cnpjAgencia, placaVeiculo, custo);
-        operacaoRepository.save(operacaoDevolucao);
+        OperacaoDevolucao operacao = new OperacaoDevolucao(0, dataHoraOperacao, emailCliente, cnpjAgencia, placaVeiculo, custo);
+        operacaoLocacaoRepository.save(operacao);
     }
 
     public void updateOperacao(int id, LocalDateTime dataHoraOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo, double custo) {
-        OperacaoDevolucao operacao = new OperacaoDevolucao(id, dataHoraOperacao, emailCliente, cnpjAgencia, placaVeiculo, custo);
-        operacaoRepository.update(id, operacao);
+        OperacaoDevolucao operacao = new OperacaoDevolucao(id, dataHoraOperacao,emailCliente, cnpjAgencia, placaVeiculo, custo);
+        operacaoLocacaoRepository.update(id, operacao);
     }
 
-    public List<OperacaoDevolucao> buscarOperacoesPorNome(String parteNome) {
-        return operacaoRepository.findByNameContains(parteNome);
+    public List<OperacaoDevolucao> buscarOperaoesPorNome(String parteNome) {
+        return operacaoLocacaoRepository.findByNameContains(parteNome);
     }
 
 
-    public List<OperacaoDevolucao> findOperacoesDevolucao() {
-        return operacaoRepository.findAll();
+    public List<OperacaoDevolucao> findOperacoes() {
+        return operacaoLocacaoRepository.findAll();
     }
 
-    public void deleteOperacoesDevolucao() {
-        operacaoRepository.deleteAll();
+    public void deleteOperacoes() {
+        operacaoLocacaoRepository.deleteAll();
     }
 }
 

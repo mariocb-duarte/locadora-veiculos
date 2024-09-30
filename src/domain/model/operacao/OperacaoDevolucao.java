@@ -66,4 +66,15 @@ public class OperacaoDevolucao {
     public void setCusto(double custo) {
         this.custo = custo;
     }
+
+    @Override
+    public String toString() {
+        return getId() + ", " + getDataHoraOperacao() + ", " + getEmailCliente() + ", " + getCnpjAgencia()+ ", " + getPlacaVeiculo()+ ", " + getCusto();
+    }
+
+
+    public static OperacaoDevolucao fromCSV(String csvLine) {
+        String[] campos = csvLine.split(",");
+        return new OperacaoDevolucao(Integer.parseInt(campos[0]), LocalDateTime.parse(campos[1]), campos[2], campos[3], campos[4], Double.parseDouble(campos[5]));
+    }
 }

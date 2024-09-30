@@ -9,14 +9,16 @@ public class Agencia {
     private String nomeFantasia;
     private String telefone;
     private String email;
+    public String endereco;
 
-    public Agencia(int id, String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email) {
+    public Agencia(int id, String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email, String endereco) {
         this.id = id;
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;
         this.telefone = telefone;
         this.email = email;
+        this.endereco = endereco;
     }
 
     public int getId() {
@@ -67,13 +69,21 @@ public class Agencia {
         this.email = email;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
     @Override
     public String toString() {
-        return id + ", " + cnpj + ", " + razaoSocial + ", " + nomeFantasia + ", " + telefone + ", " + email;
+        return id + ", " + cnpj + ", " + razaoSocial + ", " + nomeFantasia + ", " + telefone + ", " + email + ", " + endereco;
     }
 
     public static Agencia fromCSV(String csvLine) {
         String[] campos = csvLine.split(",");
-        return new Agencia(Integer.parseInt(campos[0]), campos[1], campos[2], campos[3], campos[4], campos[5]);
+        return new Agencia(Integer.parseInt(campos[0]), campos[1], campos[2], campos[3], campos[4], campos[5], campos[6]);
     }
 }

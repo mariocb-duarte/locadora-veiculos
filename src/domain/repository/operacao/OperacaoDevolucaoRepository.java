@@ -3,26 +3,23 @@ package domain.repository.operacao;
 import domain.exception.operacao.AlreadyExistsOperacaoException;
 import domain.model.operacao.OperacaoDevolucao;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperacaoDevolucaoRepository implements IOperacaoDevolucao {
-
+public class OperacaoDevolucaoRepository implements IOperacaoDevolucaoRepository{
     private static final String FILE_PATH = "devolucoes.csv";
 
 
     @Override
-    public void save(OperacaoDevolucao operacaoDevolucao) {
-        if (operacaoExists(operacaoDevolucao)) {
-            throw new AlreadyExistsOperacaoException("Operação already exists");
+    public void save(OperacaoDevolucao operacao) {
+        if (operacaoExists(operacao)) {
+            throw new AlreadyExistsOperacaoException("Devolução already exists");
         }
         int nextId = getNextId();
-        operacaoDevolucao.setId(nextId);
+        operacao.setId(nextId);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(operacaoDevolucao.toString());
+            writer.write(operacao.toString());
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,20 +27,20 @@ public class OperacaoDevolucaoRepository implements IOperacaoDevolucao {
     }
 
     @Override
-    public void update(int id, OperacaoDevolucao updatedOperacaoDevolucao) {
+    public void update(int id, OperacaoDevolucao updatedOperacao) {
         List<OperacaoDevolucao> operacaos = findAll();
         boolean updated = false;
 
         for (OperacaoDevolucao operacao : operacaos) {
             if (operacao.getId() == id) {
 
-                operacao.setDataHoraOperacao(updatedOperacaoDevolucao.getDataHoraOperacao());
-                operacao.setEmailCliente(updatedOperacaoDevolucao.getEmailCliente());
-                operacao.setCnpjAgencia(updatedOperacaoDevolucao.getCnpjAgencia());
-                operacao.setPlacaVeiculo(updatedOperacaoDevolucao.getPlacaVeiculo());
-                operacao.setCusto(updatedOperacaoDevolucao.getCusto());
+                operacao.setDataHoraOperacao(updatedOperacao.getDataHoraOperacao());
+                operacao.setEmailCliente(updatedOperacao.getEmailCliente());
+                operacao.setCnpjAgencia(updatedOperacao.getCnpjAgencia());
+                operacao.setPlacaVeiculo(updatedOperacao.getPlacaVeiculo());
+                operacao.setCusto(updatedOperacao.getCusto());
                 if (operacaoExists(operacao)) {
-                    throw new AlreadyExistsOperacaoException("Operação already exists");
+                    throw new AlreadyExistsOperacaoException("Devolução already exists");
                 }else {
                     updated = true;
                     break;
@@ -62,7 +59,7 @@ public class OperacaoDevolucaoRepository implements IOperacaoDevolucao {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Operação com ID " + id + " não encontrada.");
+            System.out.println("Devolução com ID " + id + " não encontrada.");
         }
     }
 
@@ -81,23 +78,46 @@ public class OperacaoDevolucaoRepository implements IOperacaoDevolucao {
 
     @Override
     public List<OperacaoDevolucao> findAll() {
-        return List.of();
+        List<OperacaoDevolucao> operacoes = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                operacoes.add(OperacaoDevolucao.fromCSV(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return operacoes;
     }
+
 
     @Override
     public int getNextId() {
-        return 0;
+        List<OperacaoDevolucao> operacoes = findAll();
+        if (operacoes.isEmpty()) {
+            return 1;
+        }
+        int maxId = operacoes.stream()
+                .mapToInt(OperacaoDevolucao::getId)
+                .max()
+                .orElse(0);
+        return maxId + 1;
     }
 
     @Override
     public void deleteAll() {
-
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private boolean operacaoExists(OperacaoDevolucao operacao) {
         List<OperacaoDevolucao> operacoes = findAll();
         return operacoes.stream().anyMatch(u ->
-                u.getDataHoraOperacao() == (operacao.getDataHoraOperacao()) &&
+                        u.getDataHoraOperacao() == (operacao.getDataHoraOperacao()) &&
                         u.getPlacaVeiculo().equalsIgnoreCase(operacao.getPlacaVeiculo())
         );
     }

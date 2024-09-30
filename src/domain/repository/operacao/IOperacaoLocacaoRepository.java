@@ -1,5 +1,6 @@
 package domain.repository.operacao;
 
+
 import domain.model.operacao.OperacaoLocacao;
 
 import java.util.List;

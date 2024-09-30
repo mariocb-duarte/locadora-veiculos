@@ -9,7 +9,7 @@ public class OperacaoLocacao {
     private String cnpjAgencia;
     private String placaVeiculo;
 
-    public OperacaoLocacao(int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
+    public OperacaoLocacao(int id, LocalDateTime dataHoraOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
         this.id = id;
         this.dataHoraOperacao = dataHoraOperacao;
         this.emailCliente = emailCliente;
@@ -55,6 +55,17 @@ public class OperacaoLocacao {
 
     public void setPlacaVeiculo(String placaVeiculo) {
         this.placaVeiculo = placaVeiculo;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + ", " + getDataHoraOperacao() + ", " + getEmailCliente() + ", " + getCnpjAgencia()+ ", " + getPlacaVeiculo();
+    }
+
+
+    public static OperacaoLocacao fromCSV(String csvLine) {
+        String[] campos = csvLine.split(",");
+        return new OperacaoLocacao(Integer.parseInt(campos[0]), LocalDateTime.parse(campos[1]), campos[2], campos[3], campos[4]);
     }
 }
 

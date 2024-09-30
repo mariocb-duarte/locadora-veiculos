@@ -1,6 +1,5 @@
 package domain.controller.operacao;
 
-
 import domain.model.operacao.OperacaoLocacao;
 import domain.service.operacao.OperacaoLocacaoService;
 
@@ -14,36 +13,37 @@ public class OperacaoLocacaoController {
         this.operacaoLocacaoService = new OperacaoLocacaoService();
     }
 
-    public void saveOperacao(LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjOperacao, String placaVeiculo) {
-        operacaoLocacaoService.saveOperacao(dataHoraOperacao, tipoOperacao, emailCliente, cnpjOperacao, placaVeiculo);
-        System.out.println("Operação cadastrada com sucesso!");
+    public void saveOperacaoLocacao(int id, LocalDateTime dataHoraOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
+        operacaoLocacaoService.saveOperacao(dataHoraOperacao, emailCliente, cnpjAgencia, placaVeiculo);
+        System.out.println("Locação cadastrada com sucesso!");
     }
 
-    public void findAllOperacoes() {
-        List<OperacaoLocacao> operacaos = operacaoLocacaoService.findOperacoes();
-        if (operacaos.isEmpty()) {
-            System.out.println("Nenhuma operação cadastrada.");
+    public void findAllOperacoesLocacoes() {
+        List<OperacaoLocacao> operacoes = operacaoLocacaoService.findOperacoes();
+        if (operacoes.isEmpty()) {
+            System.out.println("Nenhuma locação cadastrada.");
         } else {
-            operacaos.forEach(System.out::println);
+            operacoes.forEach(System.out::println);
         }
     }
 
-    public void deleteOperacoes() {
+    public void deleteOperacoesLocacoes() {
         operacaoLocacaoService.deleteOperacoes();
-        System.out.println("Todas as operações foram deletadas.");
+        System.out.println("Todas as locações foram deletadas.");
     }
 
-    public void atualizarOperacao(int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
-        operacaoLocacaoService.updateOperacao( id, dataHoraOperacao, tipoOperacao, emailCliente, cnpjAgencia, placaVeiculo);
-        System.out.println("operação atualizada com sucesso!");
+    public void atualizarOperacaoLocacao(int id, LocalDateTime dataHoraOperacao,String emailCliente, String cnpjAgencia, String placaVeiculo) {
+        operacaoLocacaoService.updateOperacao(id, dataHoraOperacao,emailCliente, cnpjAgencia, placaVeiculo);
+        System.out.println("Locação atualizada com sucesso!");
     }
 
-    public void buscarOperacoesPorNome(String parteNome) {
-        List<OperacaoLocacao> operacaos = operacaoLocacaoService.buscarOperacoesPorNome(parteNome);
-        if (operacaos.isEmpty()) {
-            System.out.println("Nenhuma operação encontrado com o tipo: " + parteNome);
+    public void buscarOperacaosPorNome(String parteNome) {
+        List<OperacaoLocacao> operacoes = operacaoLocacaoService.buscarOperaoesPorNome(parteNome);
+        if (operacoes.isEmpty()) {
+            System.out.println("Nenhuma locação encontrada com a placa: " + parteNome);
         } else {
-            operacaos.forEach(System.out::println);
+            operacoes.forEach(System.out::println);
         }
     }
 }
+

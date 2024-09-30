@@ -12,8 +12,8 @@ public class AgenciaController {
         this.agenciaService = new AgenciaService();
     }
 
-    public void saveAgenda(String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email) {
-        agenciaService.saveAgencia(cnpj, razaoSocial, nomeFantasia, telefone, email);
+    public void saveAgencia(String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email,String endereco) {
+        agenciaService.saveAgencia(cnpj, razaoSocial, nomeFantasia, telefone, email, endereco);
         System.out.println("Agência cadastrada com sucesso!");
     }
 
@@ -31,15 +31,24 @@ public class AgenciaController {
         System.out.println("Todas as agências foram deletadas.");
     }
 
-    public void atualizarAgencia(int id,String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email) {
-        agenciaService.updateAgencia(id, cnpj, razaoSocial, nomeFantasia, telefone, email);
+    public void atualizarAgencia(int id,String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email,String endereco) {
+        agenciaService.updateAgencia(id, cnpj, razaoSocial, nomeFantasia, telefone, email, endereco);
         System.out.println("Agência atualizada com sucesso!");
     }
 
     public void buscarAgenciasPorNome(String parteNome) {
         List<Agencia> agencias = agenciaService.buscarAgenciasPorNome(parteNome);
         if (agencias.isEmpty()) {
-            System.out.println("Nenhum usuário encontrado com o nome: " + parteNome);
+            System.out.println("Nenhum agência encontrada com o nome: " + parteNome);
+        } else {
+            agencias.forEach(System.out::println);
+        }
+    }
+
+    public void buscarAgenciasPorEndereco(String parteEndereco) {
+        List<Agencia> agencias = agenciaService.buscarAgenciasPorNome(parteEndereco);
+        if (agencias.isEmpty()) {
+            System.out.println("Nenhuma agência encontrada com o endereco: " + parteEndereco);
         } else {
             agencias.forEach(System.out::println);
         }

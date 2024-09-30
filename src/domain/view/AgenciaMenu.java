@@ -30,7 +30,9 @@ public class AgenciaMenu {
                     String telefone = scanner.nextLine();
                     System.out.print("Digite o email: ");
                     String email = scanner.nextLine();
-                    agenciaController.saveAgenda(cnpj, razaoSocial, nomeFantasia, telefone, email);
+                    System.out.print("Digite o endereco: ");
+                    String endereco = scanner.nextLine();
+                    agenciaController.saveAgencia(cnpj, razaoSocial, nomeFantasia, telefone, email, endereco);
                     break;
                 case 2:
                     agenciaController.findAllAgencias();

@@ -40,6 +40,7 @@ public class AgenciaRepository implements IAgenciaRepository {
                 agencia.setTelefone(updatedAgencia.getTelefone());
                 agencia.setEmail(updatedAgencia.getEmail());
                 agencia.setRazaoSocial(updatedAgencia.getRazaoSocial());
+                agencia.setEndereco(updatedAgencia.getEndereco());
                 if (agenciaExists(agencia)) {
                     throw new AlreadyExistsAgenciaException("Agencia already exists");
                 }else {
@@ -70,6 +71,19 @@ public class AgenciaRepository implements IAgenciaRepository {
 
         for (Agencia agencia : agencias) {
             if (agencia.getNomeFantasia().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(agencia);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Agencia> findByEnderecoContains(String substring) {
+        List<Agencia> agencias = findAll();
+        List<Agencia> result = new ArrayList<>();
+
+        for (Agencia agencia : agencias) {
+            if (agencia.getEndereco().toLowerCase().contains(substring.toLowerCase())) {
                 result.add(agencia);
             }
         }

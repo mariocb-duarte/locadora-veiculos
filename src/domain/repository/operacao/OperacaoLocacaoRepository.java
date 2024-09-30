@@ -1,23 +1,21 @@
 package domain.repository.operacao;
 
-
 import domain.exception.operacao.AlreadyExistsOperacaoException;
 import domain.model.operacao.OperacaoLocacao;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository {
+public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository{
 
     private static final String FILE_PATH = "locacoes.csv";
+
 
     @Override
     public void save(OperacaoLocacao operacao) {
         if (operacaoExists(operacao)) {
-            throw new AlreadyExistsOperacaoException("Operação already exists");
+            throw new AlreadyExistsOperacaoException("Locação already exists");
         }
         int nextId = getNextId();
         operacao.setId(nextId);
@@ -30,19 +28,19 @@ public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository {
     }
 
     @Override
-    public void update(int id, OperacaoLocacao updatedOperacaoLocacao) {
+    public void update(int id, OperacaoLocacao updatedOperacao) {
         List<OperacaoLocacao> operacaos = findAll();
         boolean updated = false;
 
         for (OperacaoLocacao operacao : operacaos) {
             if (operacao.getId() == id) {
 
-                operacao.setDataHoraOperacao(updatedOperacaoLocacao.getDataHoraOperacao());
-                operacao.setEmailCliente(updatedOperacaoLocacao.getEmailCliente());
-                operacao.setCnpjAgencia(updatedOperacaoLocacao.getCnpjAgencia());
-                operacao.setPlacaVeiculo(updatedOperacaoLocacao.getPlacaVeiculo());
+                operacao.setDataHoraOperacao(updatedOperacao.getDataHoraOperacao());
+                operacao.setEmailCliente(updatedOperacao.getEmailCliente());
+                operacao.setCnpjAgencia(updatedOperacao.getCnpjAgencia());
+                operacao.setPlacaVeiculo(updatedOperacao.getPlacaVeiculo());
                 if (operacaoExists(operacao)) {
-                    throw new AlreadyExistsOperacaoException("Operação already exists");
+                    throw new AlreadyExistsOperacaoException("Locação already exists");
                 }else {
                     updated = true;
                     break;
@@ -61,7 +59,7 @@ public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Operação com ID " + id + " não encontrada.");
+            System.out.println("Locação com ID " + id + " não encontrada.");
         }
     }
 
@@ -80,25 +78,47 @@ public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository {
 
     @Override
     public List<OperacaoLocacao> findAll() {
-        return List.of();
+        List<OperacaoLocacao> operacoes = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                operacoes.add(OperacaoLocacao.fromCSV(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return operacoes;
     }
+
 
     @Override
     public int getNextId() {
-        return 0;
+        List<OperacaoLocacao> operacoes = findAll();
+        if (operacoes.isEmpty()) {
+            return 1;
+        }
+        int maxId = operacoes.stream()
+                .mapToInt(OperacaoLocacao::getId)
+                .max()
+                .orElse(0);
+        return maxId + 1;
     }
 
     @Override
     public void deleteAll() {
-
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private boolean operacaoExists(OperacaoLocacao operacao) {
         List<OperacaoLocacao> operacoes = findAll();
         return operacoes.stream().anyMatch(u ->
-                u.getDataHoraOperacao() == (operacao.getDataHoraOperacao()) &&
-                u.getPlacaVeiculo().equalsIgnoreCase(operacao.getPlacaVeiculo())
+                        u.getDataHoraOperacao() == (operacao.getDataHoraOperacao()) &&
+                        u.getPlacaVeiculo().equalsIgnoreCase(operacao.getPlacaVeiculo())
         );
     }
 }
-

@@ -1,26 +1,26 @@
 package domain.controller.operacao;
 
 
-import domain.model.operacao.Operacao;
-import domain.service.operacao.OperacaoService;
+import domain.model.operacao.OperacaoLocacao;
+import domain.service.operacao.OperacaoLocacaoService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OperacaoController {
-    private OperacaoService operacaoService;
+public class OperacaoLocacaoController {
+    private OperacaoLocacaoService operacaoLocacaoService;
 
-    public OperacaoController() {
-        this.operacaoService = new OperacaoService();
+    public OperacaoLocacaoController() {
+        this.operacaoLocacaoService = new OperacaoLocacaoService();
     }
 
     public void saveOperacao(LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjOperacao, String placaVeiculo) {
-        operacaoService.saveOperacao(dataHoraOperacao, tipoOperacao, emailCliente, cnpjOperacao, placaVeiculo);
+        operacaoLocacaoService.saveOperacao(dataHoraOperacao, tipoOperacao, emailCliente, cnpjOperacao, placaVeiculo);
         System.out.println("Operação cadastrada com sucesso!");
     }
 
     public void findAllOperacoes() {
-        List<Operacao> operacaos = operacaoService.findOperacoes();
+        List<OperacaoLocacao> operacaos = operacaoLocacaoService.findOperacoes();
         if (operacaos.isEmpty()) {
             System.out.println("Nenhuma operação cadastrada.");
         } else {
@@ -29,17 +29,17 @@ public class OperacaoController {
     }
 
     public void deleteOperacoes() {
-        operacaoService.deleteOperacoes();
+        operacaoLocacaoService.deleteOperacoes();
         System.out.println("Todas as operações foram deletadas.");
     }
 
     public void atualizarOperacao(int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
-        operacaoService.updateOperacao( id, dataHoraOperacao, tipoOperacao, emailCliente, cnpjAgencia, placaVeiculo);
+        operacaoLocacaoService.updateOperacao( id, dataHoraOperacao, tipoOperacao, emailCliente, cnpjAgencia, placaVeiculo);
         System.out.println("operação atualizada com sucesso!");
     }
 
     public void buscarOperacoesPorNome(String parteNome) {
-        List<Operacao> operacaos = operacaoService.buscarOperacoesPorNome(parteNome);
+        List<OperacaoLocacao> operacaos = operacaoLocacaoService.buscarOperacoesPorNome(parteNome);
         if (operacaos.isEmpty()) {
             System.out.println("Nenhuma operação encontrado com o tipo: " + parteNome);
         } else {

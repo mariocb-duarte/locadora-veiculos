@@ -2,7 +2,7 @@ package domain.repository.operacao;
 
 
 import domain.exception.operacao.AlreadyExistsOperacaoException;
-import domain.model.operacao.Operacao;
+import domain.model.operacao.OperacaoLocacao;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperacaoRepository implements IOperacaoRepository {
+public class OperacaoLocacaoRepository implements IOperacaoLocacaoRepository {
 
-    private static final String FILE_PATH = "operacoes.csv";
+    private static final String FILE_PATH = "locacoes.csv";
 
     @Override
-    public void save(Operacao operacao) {
+    public void save(OperacaoLocacao operacao) {
         if (operacaoExists(operacao)) {
             throw new AlreadyExistsOperacaoException("Operação already exists");
         }
@@ -30,18 +30,17 @@ public class OperacaoRepository implements IOperacaoRepository {
     }
 
     @Override
-    public void update(int id, Operacao updatedOperacao) {
-        List<Operacao> operacaos = findAll();
+    public void update(int id, OperacaoLocacao updatedOperacaoLocacao) {
+        List<OperacaoLocacao> operacaos = findAll();
         boolean updated = false;
 
-        for (Operacao operacao : operacaos) {
+        for (OperacaoLocacao operacao : operacaos) {
             if (operacao.getId() == id) {
 
-                operacao.setDataHoraOperacao(updatedOperacao.getDataHoraOperacao());
-                operacao.setTipoOperacao(updatedOperacao.getTipoOperacao());
-                operacao.setEmailCliente(updatedOperacao.getEmailCliente());
-                operacao.setCnpjAgencia(updatedOperacao.getCnpjAgencia());
-                operacao.setPlacaVeiculo(updatedOperacao.getPlacaVeiculo());
+                operacao.setDataHoraOperacao(updatedOperacaoLocacao.getDataHoraOperacao());
+                operacao.setEmailCliente(updatedOperacaoLocacao.getEmailCliente());
+                operacao.setCnpjAgencia(updatedOperacaoLocacao.getCnpjAgencia());
+                operacao.setPlacaVeiculo(updatedOperacaoLocacao.getPlacaVeiculo());
                 if (operacaoExists(operacao)) {
                     throw new AlreadyExistsOperacaoException("Operação already exists");
                 }else {
@@ -50,11 +49,11 @@ public class OperacaoRepository implements IOperacaoRepository {
                 }
             }
         }
-        //int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo
+        //int id, LocalDateTime dataHoraOperacaoLocacao, String tipoOperacaoLocacao, String emailCliente, String cnpjAgencia, String placaVeiculo
 
         if (updated) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-                for (Operacao operacao : operacaos) {
+                for (OperacaoLocacao operacao : operacaos) {
                     writer.write(operacao.toString());
                     writer.newLine();
                 }
@@ -67,12 +66,12 @@ public class OperacaoRepository implements IOperacaoRepository {
     }
 
     @Override
-    public List<Operacao> findByNameContains(String substring) {
-        List<Operacao> operacaos = findAll();
-        List<Operacao> result = new ArrayList<>();
+    public List<OperacaoLocacao> findByNameContains(String substring) {
+        List<OperacaoLocacao> operacaos = findAll();
+        List<OperacaoLocacao> result = new ArrayList<>();
 
-        for (Operacao operacao : operacaos) {
-            if (operacao.getTipoOperacao().toLowerCase().contains(substring.toLowerCase())) {
+        for (OperacaoLocacao operacao : operacaos) {
+            if (operacao.getPlacaVeiculo().toLowerCase().contains(substring.toLowerCase())) {
                 result.add(operacao);
             }
         }
@@ -80,7 +79,7 @@ public class OperacaoRepository implements IOperacaoRepository {
     }
 
     @Override
-    public List<Operacao> findAll() {
+    public List<OperacaoLocacao> findAll() {
         return List.of();
     }
 
@@ -94,10 +93,9 @@ public class OperacaoRepository implements IOperacaoRepository {
 
     }
 
-    private boolean operacaoExists(Operacao operacao) {
-        List<Operacao> operacoes = findAll();
+    private boolean operacaoExists(OperacaoLocacao operacao) {
+        List<OperacaoLocacao> operacoes = findAll();
         return operacoes.stream().anyMatch(u ->
-                u.getTipoOperacao().equalsIgnoreCase(operacao.getTipoOperacao()) &&
                 u.getDataHoraOperacao() == (operacao.getDataHoraOperacao()) &&
                 u.getPlacaVeiculo().equalsIgnoreCase(operacao.getPlacaVeiculo())
         );

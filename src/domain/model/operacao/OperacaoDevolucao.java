@@ -2,21 +2,21 @@ package domain.model.operacao;
 
 import java.time.LocalDateTime;
 
-public class Operacao {
+public class OperacaoDevolucao {
     private int id;
     private LocalDateTime dataHoraOperacao;
-    private String tipoOperacao;
     private String emailCliente;
     private String cnpjAgencia;
     private String placaVeiculo;
+    private double custo;
 
-    public Operacao(int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
+    public OperacaoDevolucao(int id, LocalDateTime dataHoraOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo, double custo) {
         this.id = id;
         this.dataHoraOperacao = dataHoraOperacao;
-        this.tipoOperacao = tipoOperacao;
         this.emailCliente = emailCliente;
         this.cnpjAgencia = cnpjAgencia;
         this.placaVeiculo = placaVeiculo;
+        this.custo = custo;
     }
 
     public int getId() {
@@ -33,14 +33,6 @@ public class Operacao {
 
     public void setDataHoraOperacao(LocalDateTime dataHoraOperacao) {
         this.dataHoraOperacao = dataHoraOperacao;
-    }
-
-    public String getTipoOperacao() {
-        return tipoOperacao;
-    }
-
-    public void setTipoOperacao(String tipoOperacao) {
-        this.tipoOperacao = tipoOperacao;
     }
 
     public String getEmailCliente() {
@@ -66,6 +58,12 @@ public class Operacao {
     public void setPlacaVeiculo(String placaVeiculo) {
         this.placaVeiculo = placaVeiculo;
     }
+
+    public double getCusto() {
+        return custo;
+    }
+
+    public void setCusto(double custo) {
+        this.custo = custo;
+    }
 }
-
-

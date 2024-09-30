@@ -1,0 +1,71 @@
+package domain.model.operacao;
+
+import java.time.LocalDateTime;
+
+public class Operacao {
+    private int id;
+    private LocalDateTime dataHoraOperacao;
+    private String tipoOperacao;
+    private String emailCliente;
+    private String cnpjAgencia;
+    private String placaVeiculo;
+
+    public Operacao(int id, LocalDateTime dataHoraOperacao, String tipoOperacao, String emailCliente, String cnpjAgencia, String placaVeiculo) {
+        this.id = id;
+        this.dataHoraOperacao = dataHoraOperacao;
+        this.tipoOperacao = tipoOperacao;
+        this.emailCliente = emailCliente;
+        this.cnpjAgencia = cnpjAgencia;
+        this.placaVeiculo = placaVeiculo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDataHoraOperacao() {
+        return dataHoraOperacao;
+    }
+
+    public void setDataHoraOperacao(LocalDateTime dataHoraOperacao) {
+        this.dataHoraOperacao = dataHoraOperacao;
+    }
+
+    public String getTipoOperacao() {
+        return tipoOperacao;
+    }
+
+    public void setTipoOperacao(String tipoOperacao) {
+        this.tipoOperacao = tipoOperacao;
+    }
+
+    public String getEmailCliente() {
+        return emailCliente;
+    }
+
+    public void setEmailCliente(String emailCliente) {
+        this.emailCliente = emailCliente;
+    }
+
+    public String getCnpjAgencia() {
+        return cnpjAgencia;
+    }
+
+    public void setCnpjAgencia(String cnpjAgencia) {
+        this.cnpjAgencia = cnpjAgencia;
+    }
+
+    public String getPlacaVeiculo() {
+        return placaVeiculo;
+    }
+
+    public void setPlacaVeiculo(String placaVeiculo) {
+        this.placaVeiculo = placaVeiculo;
+    }
+}
+
+

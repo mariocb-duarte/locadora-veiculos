@@ -1,5 +1,6 @@
 package domain.repository.cliente;
 
+import domain.model.agencia.Agencia;
 import domain.model.cliente.ClientePessoaFisica;
 
 import java.io.*;
@@ -20,6 +21,51 @@ public class ClientePessoaFisicaRepository implements IClientePessoaFisicaReposi
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(int id, ClientePessoaFisica updatedClientePessoaFisica) {
+        List<ClientePessoaFisica> clientesPessoaFisica = findAll();
+        boolean updated = false;
+
+        for (ClientePessoaFisica clientePessoaFisica : clientesPessoaFisica) {
+            if (clientePessoaFisica.getId() == id) {
+
+                clientePessoaFisica.setNome(updatedClientePessoaFisica.getNome());
+                clientePessoaFisica.setEmail(updatedClientePessoaFisica.getEmail());
+                clientePessoaFisica.setTelefone(updatedClientePessoaFisica.getTelefone());
+                clientePessoaFisica.setCpf(updatedClientePessoaFisica.getCpf());
+                updated = true;
+                break;
+            }
+        }
+        //int id, String nome, String email, String telefone, String cpf
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (ClientePessoaFisica clientePessoaFisica : clientesPessoaFisica) {
+                    writer.write(clientePessoaFisica.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Cliente pessoa física com ID " + id + " não encontrado.");
+        }
+    }
+
+    @Override
+    public List<ClientePessoaFisica> findByNameContains(String substring) {
+        List<ClientePessoaFisica> clientesPessoaFisica = findAll();
+        List<ClientePessoaFisica> result = new ArrayList<>();
+
+        for (ClientePessoaFisica clientePessoaFisica : clientesPessoaFisica) {
+            if (clientePessoaFisica.getNome().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(clientePessoaFisica);
+            }
+        }
+        return result;
     }
 
     @Override

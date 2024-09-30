@@ -8,6 +8,14 @@ public class ClientePessoaJuridica extends Cliente{
         this.cnpj = cnpj;
     }
 
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
+
     @Override
     public String toString() {
         return getId() + ", " + getNome() + ", " + getEmail() + ", " + getTelefone() + ", " + cnpj;

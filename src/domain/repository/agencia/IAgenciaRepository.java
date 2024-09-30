@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface IAgenciaRepository {
 
-    void save(Agencia usuario);
+    void save(Agencia agencia);
+    void update(int id, Agencia agencia);
+    List<Agencia> findByNameContains(String substring);
     List<Agencia> findAll();
     int getNextId();
     void deleteAll();

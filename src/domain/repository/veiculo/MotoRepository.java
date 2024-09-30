@@ -24,6 +24,55 @@ public class MotoRepository implements IMotoRepository {
     }
 
     @Override
+    public void update(int id, Moto updatedMoto) {
+        List<Moto> motos = findAll();
+        boolean updated = false;
+
+        for (Moto moto : motos) {
+            if (moto.getId() == id) {
+
+                moto.setFabricante(updatedMoto.getFabricante());
+                moto.setModelo(updatedMoto.getModelo());
+                moto.setPlaca(updatedMoto.getPlaca());
+                moto.setAnoFabricacao(updatedMoto.getAnoFabricacao());
+                moto.setAnoModelo(updatedMoto.getAnoModelo());
+                moto.setCor(updatedMoto.getCor());
+                moto.setDisponivel(updatedMoto.isDisponivel());
+                moto.setLocalizacao(updatedMoto.getLocalizacao());
+                updated = true;
+                break;
+            }
+        }
+        //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (Moto moto : motos) {
+                    writer.write(moto.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Moto com ID " + id + " não encontrada.");
+        }
+    }
+
+    @Override
+    public List<Moto> findByNameContains(String substring) {
+        List<Moto> motos = findAll();
+        List<Moto> result = new ArrayList<>();
+
+        for (Moto moto : motos) {
+            if (moto.getModelo().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(moto);
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<Moto> findAll() {
         List<Moto> motos = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {

@@ -23,26 +23,75 @@ public class CarroRepository implements ICarroRepository{
     }
 
     @Override
+    public void update(int id, Carro updatedCarro) {
+        List<Carro> carros = findAll();
+        boolean updated = false;
+
+        for (Carro carro : carros) {
+            if (carro.getId() == id) {
+
+                carro.setFabricante(updatedCarro.getFabricante());
+                carro.setModelo(updatedCarro.getModelo());
+                carro.setPlaca(updatedCarro.getPlaca());
+                carro.setAnoFabricacao(updatedCarro.getAnoFabricacao());
+                carro.setAnoModelo(updatedCarro.getAnoModelo());
+                carro.setCor(updatedCarro.getCor());
+                carro.setDisponivel(updatedCarro.isDisponivel());
+                carro.setLocalizacao(updatedCarro.getLocalizacao());
+                updated = true;
+                break;
+            }
+        }
+        //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (Carro carro : carros) {
+                    writer.write(carro.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Carro com ID " + id + " não encontrado.");
+        }
+    }
+
+    @Override
+    public List<Carro> findByNameContains(String substring) {
+        List<Carro> carros = findAll();
+        List<Carro> result = new ArrayList<>();
+
+        for (Carro carro : carros) {
+            if (carro.getModelo().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(carro);
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<Carro> findAll() {
-        List<Carro> motos = new ArrayList<>();
+        List<Carro> carros = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                motos.add(Carro.fromCSV(line));
+                carros.add(Carro.fromCSV(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return motos;
+        return carros;
     }
 
     @Override
     public int getNextId() {
-        List<Carro> motos = findAll();
-        if (motos.isEmpty()) {
+        List<Carro> carros = findAll();
+        if (carros.isEmpty()) {
             return 1;
         }
-        int maxId = motos.stream()
+        int maxId = carros.stream()
                 .mapToInt(Carro::getId)
                 .max()
                 .orElse(0);

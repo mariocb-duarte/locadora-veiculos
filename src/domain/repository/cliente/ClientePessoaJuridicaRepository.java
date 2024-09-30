@@ -1,5 +1,6 @@
 package domain.repository.cliente;
 
+import domain.model.cliente.ClientePessoaFisica;
 import domain.model.cliente.ClientePessoaJuridica;
 
 import java.io.*;
@@ -21,6 +22,51 @@ public class ClientePessoaJuridicaRepository implements IClientePessoaJuridicaRe
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(int id, ClientePessoaJuridica updatedClientePessoaJuridica) {
+        List<ClientePessoaJuridica> clientesPessoaJuridica = findAll();
+        boolean updated = false;
+
+        for (ClientePessoaJuridica clientePessoaJuridica : clientesPessoaJuridica) {
+            if (clientePessoaJuridica.getId() == id) {
+
+                clientePessoaJuridica.setNome(updatedClientePessoaJuridica.getNome());
+                clientePessoaJuridica.setEmail(updatedClientePessoaJuridica.getEmail());
+                clientePessoaJuridica.setTelefone(updatedClientePessoaJuridica.getTelefone());
+                clientePessoaJuridica.setCnpj(updatedClientePessoaJuridica.getCnpj());
+                updated = true;
+                break;
+            }
+        }
+        //int id, String nome, String email, String telefone, String cpf
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (ClientePessoaJuridica clientePessoaJuridica : clientesPessoaJuridica) {
+                    writer.write(clientePessoaJuridica.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Cliente pessoa jurídca com ID " + id + " não encontrado.");
+        }
+    }
+
+    @Override
+    public List<ClientePessoaJuridica> findByNameContains(String substring) {
+        List<ClientePessoaJuridica> clientesPessoaJuridica = findAll();
+        List<ClientePessoaJuridica> result = new ArrayList<>();
+
+        for (ClientePessoaJuridica clientePessoaJuridica : clientesPessoaJuridica) {
+            if (clientePessoaJuridica.getNome().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(clientePessoaJuridica);
+            }
+        }
+        return result;
     }
 
     @Override

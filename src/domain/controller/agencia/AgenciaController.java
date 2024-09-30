@@ -30,4 +30,18 @@ public class AgenciaController {
         agenciaService.deleteAgencias();
         System.out.println("Todas as agências foram deletadas.");
     }
+
+    public void atualizarAgencia(int id,String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email) {
+        agenciaService.updateAgencia(id, cnpj, razaoSocial, nomeFantasia, telefone, email);
+        System.out.println("Agência atualizada com sucesso!");
+    }
+
+    public void buscarAgenciasPorNome(String parteNome) {
+        List<Agencia> agencias = agenciaService.buscarAgenciasPorNome(parteNome);
+        if (agencias.isEmpty()) {
+            System.out.println("Nenhum usuário encontrado com o nome: " + parteNome);
+        } else {
+            agencias.forEach(System.out::println);
+        }
+    }
 }

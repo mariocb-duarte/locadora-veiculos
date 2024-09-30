@@ -1,5 +1,6 @@
 package domain.service.cliente;
 
+import domain.model.cliente.ClientePessoaFisica;
 import domain.model.cliente.ClientePessoaJuridica;
 import domain.repository.cliente.ClientePessoaJuridicaRepository;
 
@@ -15,6 +16,15 @@ public class ClientePessoaJuridicaService {
     public void saveClientePessoaJuridica(String nome, String email, String telefone,  String cnpj){
         ClientePessoaJuridica clientePessoaJuridica = new ClientePessoaJuridica(0, nome, email, telefone, cnpj);
         clientePessoaJuridicaRepository.save(clientePessoaJuridica);
+    }
+
+    public void updateClientePessoaJuridica(int id, String nome, String email, String telefone, String cnpj) {
+        ClientePessoaJuridica clientePessoaJuridica = new ClientePessoaJuridica(id, nome, email, telefone, cnpj);
+        clientePessoaJuridicaRepository.update(id, clientePessoaJuridica);
+    }
+
+    public List<ClientePessoaJuridica> buscarClientesPessoaJuridicaPorNome(String parteNome) {
+        return clientePessoaJuridicaRepository.findByNameContains(parteNome);
     }
 
     public List<ClientePessoaJuridica> findClientesPessoaJuridica(){

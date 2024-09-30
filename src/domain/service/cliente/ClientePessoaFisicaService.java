@@ -17,6 +17,16 @@ public class ClientePessoaFisicaService {
         clientePessoaFisicaRepository.save(clientePessoaFisica);
     }
 
+    public void updateClientePessoaFisica(int id, String nome, String email, String telefone, String cpf) {
+        ClientePessoaFisica clientePessoaFisica = new ClientePessoaFisica(id, nome, email, telefone, cpf);
+        clientePessoaFisicaRepository.update(id, clientePessoaFisica);
+    }
+
+    public List<ClientePessoaFisica> buscarClientesPessoaFisicaPorNome(String parteNome) {
+        return clientePessoaFisicaRepository.findByNameContains(parteNome);
+    }
+
+
     public List<ClientePessoaFisica> findClientesPessoaFisica(){
         return clientePessoaFisicaRepository.findAll();
     }

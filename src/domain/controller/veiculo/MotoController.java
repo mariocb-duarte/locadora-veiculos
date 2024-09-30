@@ -1,6 +1,7 @@
 package domain.controller.veiculo;
 
 
+
 import domain.model.veiculo.Moto;
 import domain.service.veiculo.MotoService;
 
@@ -31,5 +32,19 @@ public class MotoController {
     public void deleteMotos() {
         motoService.deleteMotos();
         System.out.println("Todas as motos foram deletadas.");
+    }
+
+    public void atualizarMoto(int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao) {
+        motoService.updateMoto(id, fabricante, modelo, placa, anoFabricacao, anoModelo, cor, disponivel, localizacao);
+        System.out.println("Moto atualizada com sucesso!");
+    }
+
+    public void buscarMotosPorNome(String parteNome) {
+        List<Moto> motos = motoService.buscarMotosPorNome(parteNome);
+        if (motos.isEmpty()) {
+            System.out.println("Nenhuma moto encontrada com o modelo: " + parteNome);
+        } else {
+            motos.forEach(System.out::println);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package domain.repository.veiculo;
 
 import domain.model.veiculo.Caminhao;
+import domain.model.veiculo.Moto;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,6 +21,56 @@ public class CaminhaoRepository implements ICaminhaoRepository{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(int id, Caminhao updatedcaminhao) {
+        List<Caminhao> caminhoes = findAll();
+        boolean updated = false;
+
+        for (Caminhao caminhao : caminhoes) {
+            if (caminhao.getId() == id) {
+
+                caminhao.setFabricante(updatedcaminhao.getFabricante());
+                caminhao.setModelo(updatedcaminhao.getModelo());
+                caminhao.setPlaca(updatedcaminhao.getPlaca());
+                caminhao.setAnoFabricacao(updatedcaminhao.getAnoFabricacao());
+                caminhao.setAnoModelo(updatedcaminhao.getAnoModelo());
+                caminhao.setCor(updatedcaminhao.getCor());
+                caminhao.setDisponivel(updatedcaminhao.isDisponivel());
+                caminhao.setLocalizacao(updatedcaminhao.getLocalizacao());
+
+                updated = true;
+                break;
+            }
+        }
+        //int id, String fabricante, String modelo, String placa, int anoFabricacao, int anoModelo, String cor, boolean disponivel, String localizacao
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (Caminhao caminhao : caminhoes) {
+                    writer.write(caminhao.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Caminhão com ID " + id + " não encontrado.");
+        }
+    }
+
+    @Override
+    public List<Caminhao> findByNameContains(String substring) {
+        List<Caminhao> caminhoes = findAll();
+        List<Caminhao> result = new ArrayList<>();
+
+        for (Caminhao caminhao : caminhoes) {
+            if (caminhao.getModelo().toLowerCase().contains(substring.toLowerCase())) {
+                result.add(caminhao);
+            }
+        }
+        return result;
     }
 
     @Override

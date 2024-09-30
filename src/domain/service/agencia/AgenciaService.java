@@ -17,6 +17,17 @@ public class AgenciaService {
         agenciaRepository.save(agencia);
     }
 
+    public void updateAgencia(int id, String cnpj, String razaoSocial, String nomeFantasia, String telefone, String email) {
+        Agencia agencia = new Agencia(id, cnpj, razaoSocial, nomeFantasia, telefone, email);
+        agenciaRepository.update(id, agencia);
+    }
+
+    public List<Agencia> buscarAgenciasPorNome(String parteNome) {
+        return agenciaRepository.findByNameContains(parteNome);
+    }
+
+
+
     public List<Agencia> findAgencias() {
         return agenciaRepository.findAll();
     }
